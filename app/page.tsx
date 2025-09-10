@@ -24,7 +24,8 @@ export default function Home() {
         type="button"
         onClick={toggleTheme}
         className="absolute top-4 right-4"
-        aria-label="toggle theme"
+        aria-pressed={theme === "dark"}
+        aria-label={theme === "dark" ? "switch to light theme" : "switch to dark theme"}
       >
         {theme === "dark" ? (
           <svg
@@ -66,6 +67,9 @@ export default function Home() {
             <line x1="12" y1="17" x2="12" y2="21" />
           </svg>
         )}
+        <span className="sr-only">
+          {theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+        </span>
       </button>
 
       <h1 className="text-3xl font-bold mb-6 text-text">Todo List</h1>
