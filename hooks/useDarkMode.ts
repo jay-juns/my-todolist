@@ -35,8 +35,24 @@ export function useDarkMode() {
 
     if (theme === "system") {
       const handler = () => applyTheme("system");
-      mediaQuery.addEventListener("change", handler);
-      return () => mediaQuery.removeEventListener("change", handler);
+      if (typeof mediaQuery.addEventListener === "function") {
+        mediaQuery.addEventListener("change", handler);
+        return () => mediaQuery.removeEventListener("change", handler);
+      } else if (
+        typeof (
+          mediaQuery as MediaQueryList & {
+            addListener?: (listener: (e: MediaQueryListEvent) => void) => void;
+            removeListener?: (listener: (e: MediaQueryListEvent) => void) => void;
+          }
+        ).addListener === "function"
+      ) {
+        const legacy = mediaQuery as MediaQueryList & {
+          addListener: (listener: (e: MediaQueryListEvent) => void) => void;
+          removeListener: (listener: (e: MediaQueryListEvent) => void) => void;
+        };
+        legacy.addListener(handler);
+        return () => legacy.removeListener(handler);
+      }
     }
   }, [theme]);
 
